@@ -1,8 +1,8 @@
 var GroupSheetWidthArray = [100,300,300];
-var GroupSheetHeaderArray = ["Type","Email","User Name"];
+var GroupSheetHeaderArray = ["Type","Email","Name"];
 var GroupSheetFormat = new SheetFormat(GroupSheetHeaderArray,GroupSheetWidthArray);
 var AllGroupSheetWidthArray = [300,300,50,300];
-var AllGroupSheetHeaderArray = ["Group Name","Email","Member Count","Link"];
+var AllGroupSheetHeaderArray = ["Name","Email","Member Count","Link"];
 var AllGroupSheetFormat = new SheetFormat(AllGroupSheetHeaderArray,AllGroupSheetWidthArray);
 
 function SheetFormat(headerArray,widthArray) {
@@ -15,21 +15,20 @@ function SheetFormat(headerArray,widthArray) {
       };
     }
     if (this.headerArray != null){
-      for (var i=0; i<this.headerArray.length;i++){
-        sheet.getRange(1,i+1).setValue(this.headerArray[i]);
-      }
+      sheet.getRange(1,1,1,headerArray.length).setValues([this.headerArray]).setFontWeight("bold");
     }
   };
+  this.startLineNumber = 2;
   
-  this.readWithFormat = function (sheet){
-    sheet = SpreadsheetApp.create("");
-    var i = 0;
-    while (sheet.getRange(2,i)!=null){
-      
+  this.writeWithFormat = function (sheet, data){
+    this.applyFormat(sheet);
+    for (var i=0; i<data.length; i++){
+      for (var j=0; j<this.headerArray.length; j++){
+        sheet.getRange(i+this.startLineNumber, j+1).setValue(data[i][this.headerArray[j]]);
+      }
     }
-     
+    sheet.autoResizeColumns(1,this.headerArray.length);
   }
 }
-
 
 
